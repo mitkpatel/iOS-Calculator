@@ -28,10 +28,17 @@ class ViewController: UIViewController {
     func push(expr: String) -> String {
         if(expression.isEmpty) {
             self.expression += expr
+            print(expression)
             return expr
         }else if(!expr.contains("[0-9]+")) {
             self.expression += expr
+            print(expression)
             return expr
+        }else if(expr.last == "+" ||
+                    expr.last == "-" ||
+                    expr.last == "*" ||
+                    expr.last == "/") {
+            return "Wrong Input"
         }else {
             return "Something wrong!!!"
         }
@@ -45,19 +52,19 @@ class ViewController: UIViewController {
                 
                 if currentOperation == "Add" {
                     result = "\(Double(leftValue)! + Double(rightValue)!)"
-                    push(expr: "+")
+                    leftValue = result;
                     return result
                 } else if currentOperation == "Subtract" {
                     result = "\(Double(leftValue)! - Double(rightValue)!)"
-                    push(expr: "-")
+                    leftValue = result;
                     return result
                 } else if currentOperation == "Multipy" {
                     result = "\(Double(leftValue)! * Double(rightValue)!)"
-                    push(expr: "*")
+                    leftValue = result;
                     return result
                 } else if currentOperation == "Divide" {
                     result = "\(Double(leftValue)! / Double(rightValue)!)"
-                    push(expr: "/")
+                    leftValue = result;
                     return result
                 } else {
                     return "Wrong input"
@@ -89,26 +96,47 @@ class ViewController: UIViewController {
         result = ""
         currentOperation = ""
         outputLbl.text = "0"
+        expression = ""
     }
     
     @IBAction func addPressed(_ sender: UIButton) {
+        push(expr: "+")
         calc(operation: "Add")
     }
     
     @IBAction func subtractPressed(_ sender: UIButton) {
+        push(expr: "-")
         calc(operation: "Subtract")
     }
     
     @IBAction func multipyPressed(_ sender: UIButton) {
+        push(expr: "*")
         calc(operation: "Multipy")
     }
     
     @IBAction func dividePressed(_ sender: UIButton) {
+        push(expr: "/")
         calc(operation: "Divide")
     }
     
     @IBAction func equalPressed(_ sender: UIButton) {
         outputLbl.text = calc(operation: "currentOperation")
     }
+    
+    @IBOutlet weak var historyLbl: UILabel!
+    
+    @IBAction func historyPressed(_ sender: UIButton) {
+        
+        if(historyLbl.isHidden) {
+            historyLbl.isHidden = false
+            historyLbl.text = "\(expression) = \(outputLbl.text!)"
+            sender.setTitle("Hide History", for: .normal)
+        }
+        else {
+            historyLbl.isHidden = true
+            sender.setTitle("Show History", for: .normal)
+        }
+    }
+    
 }
 
